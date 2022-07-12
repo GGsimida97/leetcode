@@ -1,36 +1,56 @@
 package com.wangjf;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Stack;
+import java.util.*;
 
 public class MyDailyTest {
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        String s = "abc";
-        String[] strings = solution.permutation(s);
-        for (String n : strings) System.out.println(n);
+    static int i = 2;
+    static int gg = 0;
+    public static void main(String[] args) throws Exception {
+
+        Number n = 2.3;
+        Class<? extends Number> c = n.getClass();
+        System.out.println(c);
+//        int j = 1;
+//        A threadA = new A(i,j);
+//        B threadB = new B(i,j);
+//        threadA.start();
+//        threadB.start();
+//        threadA.join();
+//        threadB.join();
+
     }
 }
-class Solution {
-    public String[] permutation(String s) {
-        HashSet<String> resSet = new HashSet<>();
-        char[] arr = s.toCharArray();
-        boolean[] visted = new boolean[arr.length]; // 用以标记已访问的字符
-        dfs("", resSet, arr, visted );
-        return resSet.toArray(new String[0]);
+class A extends Thread {
+    private int a;
+    private int b;
+    @Override
+    public void run() {
+        for (int i = 0; i < 8; i++) {
+            MyDailyTest.gg += 1;
+            this.a += 1;
+            System.out.println("线程A" + MyDailyTest.gg);
+        }
     }
-    void dfs(String resStr, HashSet<String> resSet, char[] arr, boolean[] visted) {
-        if (resStr.length() == arr.length) {
-            resSet.add(resStr);
-            return;
+
+    public A(int a, int b) {
+        this.a = a;
+        this.b = b;
+    }
+}
+class B extends Thread {
+    private int a;
+    private int b;
+    @Override
+    public void run() {
+        for (int i = 0; i < 8; i++) {
+            MyDailyTest.gg += 1;
+            this.a += 1;
+            System.out.println("线程B" + MyDailyTest.gg);
         }
-        for (int i = 0; i < arr.length; i++) {
-            if (visted[i]) continue;
-            visted[i] = true;
-            dfs(resStr + String.valueOf(arr[i]), resSet, arr, visted);
-            visted[i] = false;
-        }
+    }
+
+    public B(int a, int b) {
+        this.a = a;
+        this.b = b;
     }
 }

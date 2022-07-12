@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public class QuickSortTest {
     public static void main(String[] args) {
-        int[] arr = {6,72,113,11,23};
-        new QuickSortTest().quick(0, 4, arr);
+        int[] arr = {6};
+        new QuickSortTest().quick(0, 0, arr);
         System.out.println(Arrays.toString(arr));
     }
     int divide(int start, int end, int[] arr) {
