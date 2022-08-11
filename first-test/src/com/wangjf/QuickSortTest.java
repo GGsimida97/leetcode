@@ -4,10 +4,11 @@ import java.util.Arrays;
 
 public class QuickSortTest {
     public static void main(String[] args) {
-        int[] arr = {-4,0,7,4,9,-5,-1,0,-7,-1};
-        new QuickSortTest().quick(0, 9, arr);
-        System.out.println(Arrays.toString(arr));
+        int[] arr = {5, 1, 2, 4, 3};
+        new QuickSortTest().quick(0, 4, arr);
+//        System.out.println(Arrays.toString(arr));
     }
+
     int divide(int start, int end, int[] arr) {
         int tag = arr[end];
         int lowIndex = start;
@@ -16,9 +17,9 @@ public class QuickSortTest {
                 int tmp = arr[i];
                 arr[i] = arr[lowIndex];
                 arr[lowIndex] = tmp;
-                lowIndex ++;
+                lowIndex++;
             }
-//            System.out.println(Arrays.toString(arr));
+            System.out.println(Arrays.toString(arr));
         }
         int tmp = arr[end];
         arr[end] = arr[lowIndex];
@@ -26,6 +27,7 @@ public class QuickSortTest {
 //        System.out.println(Arrays.toString(arr));
         return lowIndex;
     }
+
     void quick(int start, int end, int[] arr) {
         if (start < end) {
             int point = divide(start, end, arr);

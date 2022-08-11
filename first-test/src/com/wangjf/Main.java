@@ -8,15 +8,17 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         int res = 1;
 
-//        String line = scanner.nextLine();
-//        String[] strs = line.split(" ");
+//        while (scanner.hasNextInt()) {
+//            int i = scanner.nextInt();
+//            System.out.println(i);
+//            if (i == 5) break;
+//        }
 
+        while (scanner.hasNextLine()) {
             String s = scanner.nextLine();
-//            System.out.println(s);
             String[] s1 = s.split(" ");
-            res = Main.chooseSite(s1);
-            System.out.println(res);
-
+            System.out.println(Math.max(res, Main.chooseSite(s1)));
+        }
     }
 
     public static int chooseSite(String[] args) {

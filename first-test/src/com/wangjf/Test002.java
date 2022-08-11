@@ -1,82 +1,91 @@
 package com.wangjf;
 
 
-import java.util.LinkedList;
-
+import java.util.*;
+import java.util.regex.Matcher;
 
 
 public class Test002 {
+
     public static void main(String[] args) {
-        System.out.println(Math.max(2, 4));
-//        Solution solution = new Solution();
-//        ListNode node1 = new ListNode(1);
-//        ListNode node2 = new ListNode(0);
-//        ListNode node3 = new ListNode(1);
-//        ListNode node4 = new ListNode(1);
-//        node1.next = node2;
-//        node1.next.next = node3;
 
-
-//        node1.next.next.next = node4;
-//        boolean palindrome = solution.isPalindrome(node1);
-//        System.out.println(palindrome);
-//        LinkedList list = new LinkedList();
-//        list.add(1);
-//        list.add(2);
-//        list.add(3);
-//        list.add(4);
-//        System.out.println(list.pollLast());
-////        System.out.println(list.poll());
-
-    }
-}
-
-class ListNode {
-    int val;
-    ListNode next;
-
-    ListNode() {
-    }
-
-    ListNode(int val) {
-        this.val = val;
-    }
-
-    ListNode(int val, ListNode next) {
-        this.val = val;
-        this.next = next;
-    }
-}
-
-class Solution {
-    public boolean isPalindrome(ListNode head) {
-        if (head == null || head.next == null) return true;
-        LinkedList<Integer> list = new LinkedList<>();
-        ListNode tmp = head;
-        while (tmp != null) {
-            list.add(tmp.val);
-            tmp = tmp.next;
-        }
-        boolean flag = true;
-        while (!list.isEmpty()) {
-            int i = list.pollLast();
-            int j  = list.poll();
-            if (i != j) {
-                flag = false;
-                break;
+        // n表示层数
+        // m表示颜色数
+        Scanner scanner = new Scanner(System.in);
+        while (scanner.hasNextInt()) {
+            int n = scanner.nextInt();
+            int m = scanner.nextInt();
+            int[][] arr = new int[n][2];
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < 2; j++) {
+                    arr[i][j] = scanner.nextInt();
+                }
             }
+
+            int res = Test002.cal(arr);
+            System.out.println(res);
         }
-        return flag;
     }
 
-    ListNode reverse(ListNode head) {
-        ListNode cur = head, pre = null;
-        while (cur != null) {
-            ListNode nextNode = cur.next;
-            cur.next = pre;
-            pre = cur;
-            cur = nextNode;
+    static int cal(int[][] arr) {
+        int row = arr.length;
+        int i = 0, res = 0;
+        while (i < row - 1) {
+            if (!Test002.exists(arr[i], arr[i + 1])) {
+                int a1 = Arrays.stream(arr[i]).min().getAsInt();
+                int a2 = Arrays.stream(arr[i + 1]).min().getAsInt();
+                res += a1 * a2;
+            }
+            i++;
         }
-        return pre;
+        return res;
+    }
+
+    static boolean exists(int[] arr1, int[] arr2) {
+        Arrays.sort(arr1);
+        Arrays.sort(arr2);
+        for (int i = 0; i < 2; i++) {
+            if (arr1[i] == arr2[i]) return true;
+        }
+        return false;
+    }
+}
+
+//class Solution {
+//    public int[][] merge(int[][] intervals) {
+//        if (intervals == null || intervals.length < 1) return new int[0][0];
+//        if (intervals.length < 2) return intervals;
+//        Arrays.sort(intervals, (v1, v2) -> v1[0] - v2[0]);
+//        int[][] resArr = new int[intervals.length][2];
+//        int index = 0;
+//        for (int[] interval : intervals) {
+//            if (index == 0 || resArr[index - 1][1] < interval[0]) resArr[index++] = interval;
+//            else resArr[index - 1][1] = Math.max(resArr[index - 1][1], interval[1]);
+//        }
+//        return Arrays.copyOf(resArr, index);
+//    }
+//}
+class Solution {
+    public void sortColors(int[] nums) {
+        // 定义两个指针 zeroPoint负责将0分配到数组头，twoPoint负责将2分配到数组尾
+        // i用于顺序遍历数组
+        if (nums == null || nums.length < 3) return;
+        int i = 0, zeroPoint = 0, twoPoint = nums.length;
+        while (i < twoPoint) {
+            if (nums[i] == 0) {
+                swap(i, zeroPoint, nums);
+                i++;
+                zeroPoint++;
+            } else if (nums[i] == 2) {
+                twoPoint--;
+                swap(i, twoPoint, nums);
+            } else i++;
+        }
+    }
+
+    void swap(int i, int j, int[] arr) {
+        int tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
     }
 }
