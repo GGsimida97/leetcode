@@ -1,5 +1,7 @@
 package com.wangjf.permutations;
 
+
+
 import java.util.*;
 
 public class MyPractise {
@@ -7,9 +9,11 @@ public class MyPractise {
     private static Deque<Integer> path = new ArrayDeque<>();
 
     public static void main(String[] args) {
-        int[] arr = {1, 2, 2, 3};
-        List<List<Integer>> lists = selectNumsFromArrayFocusOrder(arr, 2);
+        int[] arr = {2,3,-2,4};
+        List<List<Integer>> lists = selectNumsFromArray(arr, 3);
         lists.forEach(System.out::println);
+
+
     }
 
     // n个数中(有重复)选取k个数（组合问题）

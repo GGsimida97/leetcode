@@ -1,9 +1,6 @@
 package com.wangjf;
 
-import java.math.BigDecimal;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class MyDailyTest {
@@ -11,10 +8,9 @@ public class MyDailyTest {
 
     public static void main(String[] args) {
         Solution solution = new Solution();
-//        List<Integer> closestElements = solution.findClosestElements(new int[]{-2, -1, 1, 2, 3, 4, 5}, 7, 3);
-//        List<Integer> closestElements = solution.findClosestElements(new int[]{0, 1, 1, 1, 2, 3, 6, 7, 8, 9}, 9, 4);
-        List<Integer> closestElements = solution.findClosestElements(new int[]{3,5,8,10}, 2, 15);
-        closestElements.forEach(System.out::println);
+        int[] arr = {-3,0,1,-2};
+        int i = solution.maxProduct(arr);
+        System.out.println(i);
     }
 }
 
@@ -191,58 +187,137 @@ public class MyDailyTest {
 //        return count;
 //    }
 //}
+
+//// 139单词拆分
+//class Solution {
+//    public boolean wordBreak(String s, List<String> wordDict) {
+//        if (s == null) return false;
+//        return dfs(s, wordDict, 0);
+//    }
+//    boolean dfs(String s, List<String> wordDict, int start) {
+//        if (s.length() == 0) {
+//            return true;
+//        }
+//        for (int i = 0; i < s.length(); i++) {
+//            if (start + i == s.length()) break;
+//            if (!wordDict.contains(s.substring(start, start + i + 1))) continue;
+//            return dfs(s.substring(start + i + 1), wordDict, 0);
+//        }
+//        return false;
+//    }
+//}
+
+////148 排序链表
+//
+//
+//class ListNode {
+//     int val;
+//     ListNode next;
+//     ListNode() {}
+//     ListNode(int val) { this.val = val; }
+//     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+//
+//    @Override
+//    public String toString() {
+//        return "ListNode{" +
+//                "val=" + val +
+//                ", next=" + next +
+//                '}';
+//    }
+//}
+//class Solution {
+//    public ListNode sortList(ListNode head) {
+//        if (head == null || head.next == null) return head;
+//        PriorityQueue<ListNode> queue = new PriorityQueue<>(new Comparator<ListNode>() {
+//            public int compare(ListNode l1, ListNode l2) {
+//                Integer i = new Integer(l1.val);
+//                Integer j = new Integer(l2.val);
+//                return i.compareTo(j);
+//            }
+//        });
+//        ListNode cur = head;
+//        while (cur != null) {
+//            queue.offer(cur);
+//            cur = cur.next;
+//        }
+//        ListNode root = new ListNode(0);
+//        while (!queue.isEmpty()) {
+//            ListNode poll = queue.poll();
+//            System.out.println(poll);
+//            root.next = new ListNode(poll.val);
+//
+//            root = root.next;
+//        }
+//        return root.next;
+//    }
+//}
+
+//// 选择两个正序数组的中位数
+//class Solution {
+//    public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+//        int len1 = nums1.length, len2 = nums2.length;
+//        int[] arr = new int[len1 + len2];
+//        int i = 0, j = 0, index = 0;
+//        while (i < len1 && j < len2) {
+//            if (nums1[i] < nums2[j]) {
+//                arr[index] = nums1[i];
+//                i++;
+//            } else {
+//                arr[index] = nums2[j];
+//                j++;
+//            }
+//            index++;
+//        }
+//        if (i == len1 && j == len2) return cal(arr);
+//        if (i == len1) {
+//            copy(arr, index, nums2, j);
+//        } else copy(arr, index, nums1, i);
+//        return cal(arr);
+//    }
+//    void copy(int[] arr, int index, int[] nu, int t) {
+//        for (int i = index; i < arr.length && t < nu.length; i++) {
+//            arr[i] = nu[t];
+//            t++;
+//        }
+//    }
+//    double cal(int[] arr) {
+//        int size = arr.length;
+//        if ((size & 1) == 1) {
+//            return (double) arr[size / 2];
+//        } else return ((double) arr[size / 2] + (double) (arr[size / 2 - 1])) / 2;
+//    }
+//}
+
 class Solution {
-    public List<Integer> findClosestElements(int[] arr, int k, int x) {
-        int[] tmp = new int[arr.length + 1];
-        for (int i = 0; i < arr.length; i++) {
-            tmp[i] = arr[i];
+    // List<List<Integer>> resList = new ArrayList<>();
+    int res;
+    LinkedList<Integer> path = new LinkedList<>();
+    public int maxProduct(int[] nums) {
+        if (nums.length < 2) return nums[0];
+        this.res = nums[0];
+
+        dfs(0, nums);
+
+        return res;
+    }
+    void dfs(int start, int[] nums) {
+        if (start == nums.length) {
+            int tmp = calSum(path);
+            res = Math.max(res, tmp);
+            return;
         }
-        tmp[tmp.length - 1] = x;
-        Arrays.sort(tmp);
-        List<Integer> res = new ArrayList<>();
-        int index = Integer.MIN_VALUE;
-        int left = 0, right = tmp.length - 1;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (tmp[mid] == x) {
-                index = mid;
-                break;
-            } else if (x < tmp[mid]) right = mid - 1;
-            else left = mid + 1;
+        for (int i = 0; i < nums.length; i++) {
+            for (int j = start ; j < start + i + 1; j++) path.offer(nums[j]);
+            dfs(start + i + 1, nums);
+            for (int j = start ; j < start + i + 1; j++) path.poll();
+
         }
-        if (index == 0) {
-            for (int i = 1; i < tmp.length && i <= k; i++) res.add(tmp[i]);
-            return res;
-        } else if (index == tmp.length - 1) {
-            for (int i = tmp.length - k - 1; i >= 1 && i < tmp.length - 1; i++) res.add(tmp[i]);
-            return res;
+    }
+    int calSum(LinkedList<Integer> path) {
+        int res = path.get(0);
+        for (int i = 1; i < path.size(); i++) {
+            res *= path.get(i);
         }
-        int pre = index - 1, last = index + 1, count = 0;
-//        SortedSet<Integer> set = new TreeSet<>();
-        while (pre >= 0 || last <= tmp.length - 1) {
-            if (count == k) break;
-            if (pre < 0) {
-                for (int j = last; j < tmp.length && j < last + k - count; j++) {
-                    res.add(tmp[j]);
-                }
-                break;
-            }
-            if (last > tmp.length - 1) {
-                for (int i = pre; i >= 0 && i > pre - k + count; i--) {
-                    res.add(tmp[i]);
-                }
-                break;
-            }
-            if (tmp[index] - tmp[pre] > tmp[last] - tmp[index]) {
-                res.add(tmp[last]);
-                last++;
-            } else if (tmp[index] - tmp[pre] <= tmp[last] - tmp[index]) {
-                res.add(tmp[pre]);
-                pre--;
-            }
-            count++;
-        }
-        Collections.sort(res);
         return res;
     }
 }
