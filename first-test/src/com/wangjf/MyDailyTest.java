@@ -1,17 +1,59 @@
 package com.wangjf;
 
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class MyDailyTest {
 
+    public static void main(String[] args) throws InterruptedException {
 
-    public static void main(String[] args) {
-        Solution solution = new Solution();
-        int[] arr = {-3,0,1,-2};
-        int i = solution.maxProduct(arr);
-        System.out.println(i);
+//        Scanner scanner = new Scanner(System.in);
+//        int mount = scanner.nextInt();
+//        int k = scanner.nextInt();
+//        int[] arr = new int[mount];
+//        for (int i = 0; i < mount; i++) {
+//            arr[i] = scanner.nextInt();
+//        }
+//        int res = cal(arr, k);
+//        System.out.println(res);
+//    }
+//
+//    public static int cal(int[] nums, int k) {
+//        if (nums == null || nums.length == 0) {
+//            return 0;
+//        }
+//
+//        if (nums.length == 1) {
+//            return nums[0];
+//        }
+//
+//        int[] dp = new int[nums.length];
+//        dp[0] = 0;
+//        for (int i = 1; i < nums.length; i++) {
+//            dp[i] = Integer.MAX_VALUE;
+//        }
+//
+//        for (int i = 0; i < nums.length; i++) {
+//            for (int j = i + 1; j <= i + k && j < nums.length; j++) {
+//                int extra = nums[j] > nums[i] ? nums[j] - nums[i] : 0;
+//                dp[j] = Math.min(dp[j], dp[i] + extra);
+//            }
+//        }
+//
+//
+        int[] arr = {9,10,9,-7,-4,-8,2,-6};
+        Solution s = new Solution();
+        int[] ints = s.maxSlidingWindow(arr, 5);
+        for (int i = 0; i < ints.length; i++) {
+            System.out.print(ints[i]);
+        }
     }
+
 }
 
 ///**
@@ -289,35 +331,22 @@ public class MyDailyTest {
 //}
 
 class Solution {
-    // List<List<Integer>> resList = new ArrayList<>();
-    int res;
-    LinkedList<Integer> path = new LinkedList<>();
-    public int maxProduct(int[] nums) {
-        if (nums.length < 2) return nums[0];
-        this.res = nums[0];
-
-        dfs(0, nums);
-
-        return res;
-    }
-    void dfs(int start, int[] nums) {
-        if (start == nums.length) {
-            int tmp = calSum(path);
-            res = Math.max(res, tmp);
-            return;
-        }
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        int[] res = new int[nums.length - k + 1];
+        List<Integer> list = new ArrayList<>();
         for (int i = 0; i < nums.length; i++) {
-            for (int j = start ; j < start + i + 1; j++) path.offer(nums[j]);
-            dfs(start + i + 1, nums);
-            for (int j = start ; j < start + i + 1; j++) path.poll();
-
+            PriorityQueue<Integer> queue = new PriorityQueue<>(new Comparator<Integer>() {
+                public int compare(Integer o1, Integer o2) {
+                    return o2.compareTo(o1);
+                }
+            });
+            for (int j = i; j < i + k && j < nums.length; j++) {
+                // PriorityQueue<Integer> tmp = queue;
+                queue.offer(nums[j]);
+            }
+            list.add(queue.poll());
         }
-    }
-    int calSum(LinkedList<Integer> path) {
-        int res = path.get(0);
-        for (int i = 1; i < path.size(); i++) {
-            res *= path.get(i);
-        }
+        for (int i = 0; i < res.length; i++) res[i] = list.get(i);
         return res;
     }
 }

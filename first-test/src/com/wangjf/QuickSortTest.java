@@ -7,6 +7,7 @@ public class QuickSortTest {
         int[] arr = {5, 1, 2, 4, 3};
         new QuickSortTest().quick(0, 4, arr);
 //        System.out.println(Arrays.toString(arr));
+
     }
 
     int divide(int start, int end, int[] arr) {
