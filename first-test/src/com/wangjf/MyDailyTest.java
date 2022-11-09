@@ -1,60 +1,54 @@
 package com.wangjf;
 
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 
 public class MyDailyTest {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
 
-//        Scanner scanner = new Scanner(System.in);
-//        int mount = scanner.nextInt();
-//        int k = scanner.nextInt();
-//        int[] arr = new int[mount];
-//        for (int i = 0; i < mount; i++) {
-//            arr[i] = scanner.nextInt();
-//        }
-//        int res = cal(arr, k);
-//        System.out.println(res);
-//    }
-//
-//    public static int cal(int[] nums, int k) {
-//        if (nums == null || nums.length == 0) {
-//            return 0;
-//        }
-//
-//        if (nums.length == 1) {
-//            return nums[0];
-//        }
-//
-//        int[] dp = new int[nums.length];
-//        dp[0] = 0;
-//        for (int i = 1; i < nums.length; i++) {
-//            dp[i] = Integer.MAX_VALUE;
-//        }
-//
-//        for (int i = 0; i < nums.length; i++) {
-//            for (int j = i + 1; j <= i + k && j < nums.length; j++) {
-//                int extra = nums[j] > nums[i] ? nums[j] - nums[i] : 0;
-//                dp[j] = Math.min(dp[j], dp[i] + extra);
-//            }
-//        }
-//
-//
-        int[] arr = {9,10,9,-7,-4,-8,2,-6};
-        Solution s = new Solution();
-        int[] ints = s.maxSlidingWindow(arr, 5);
-        for (int i = 0; i < ints.length; i++) {
-            System.out.print(ints[i]);
-        }
+        Class objectClass = Class.forName("com.wangjf.reflection.TestObject");
+        Constructor declaredConstructor = objectClass.getDeclaredConstructor(String.class);
+        declaredConstructor.setAccessible(true);
+        Object myObject = declaredConstructor.newInstance("MyObjectName");
+        Field age = objectClass.getDeclaredField("age");
+        age.setAccessible(true);
+        age.set(myObject, 100);
+        Method method = objectClass.getDeclaredMethod("one", String.class);
+        method.setAccessible(true);
+        Object res = method.invoke(myObject, "test msg");
+        System.out.println(res);
+        ThreadLocal<Integer> threadLocal = new ThreadLocal<>();
+
+
     }
-
 }
+
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        if (nums == null || nums.length < 1) return 0;
+        Set<Integer> set = new TreeSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            set.add(nums[i]);
+        }
+        Object[] arr = set.toArray();
+        int len = 1, left = 0, right = 0;
+        while (right < arr.length - 1) {
+            if (!((Integer) arr[right + 1]).equals((Integer) arr[right] + 1)) {
+                left = right + 1;
+            }
+            right++;
+            len = Math.max(len, right - left + 1);
+        }
+        return len;
+    }
+}
+
 
 ///**
 // * 组合 n个数中选k个做组合
@@ -330,23 +324,4 @@ public class MyDailyTest {
 //    }
 //}
 
-class Solution {
-    public int[] maxSlidingWindow(int[] nums, int k) {
-        int[] res = new int[nums.length - k + 1];
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < nums.length; i++) {
-            PriorityQueue<Integer> queue = new PriorityQueue<>(new Comparator<Integer>() {
-                public int compare(Integer o1, Integer o2) {
-                    return o2.compareTo(o1);
-                }
-            });
-            for (int j = i; j < i + k && j < nums.length; j++) {
-                // PriorityQueue<Integer> tmp = queue;
-                queue.offer(nums[j]);
-            }
-            list.add(queue.poll());
-        }
-        for (int i = 0; i < res.length; i++) res[i] = list.get(i);
-        return res;
-    }
-}
+

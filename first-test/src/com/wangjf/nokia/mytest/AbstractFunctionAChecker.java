@@ -18,4 +18,5 @@ public abstract class AbstractFunctionAChecker implements GlobalCheckerAPI{
         System.out.println("A类checker【独有的】后处理");
         System.out.println("数据持久化");
     }
+
 }
